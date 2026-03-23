@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { width: 300px; padding: 10px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif; }
+    .header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
+    .header img { width: 20px; height: 20px; flex-shrink: 0; }
+    .header h3 { margin: 0; font-size: 14px; font-weight: 600; color: #333; }
+    .section { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+    .section:last-child { border-bottom: none; margin-bottom: 0; }
+    label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+    input[type="checkbox"] { cursor: pointer; }
+    textarea {
+      width: 100%;
+      min-height: 40px;
+      max-height: 160px;
+      margin-top: 6px;
+      font-size: 12px;
+      padding: 6px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: none;
+      overflow-y: hidden;
+      display: block;
+    }
+    .hint { font-size: 12px; color: #555; margin-top: 4px; line-height: 1.3; }
+    .info {
+      font-size: 11px;
+      color: #0066cc;
+      margin-top: 6px;
+      padding: 6px;
+      background: #f0f7ff;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="icons/icon32.png" alt="icon">
+    <h3>AI-Less Habr</h3>
+  </div>
+
+  <div class="section">
+    <label>
+      <input type="checkbox" id="toggle">
+      Скрывать статьи из хаба "Искусственный интеллект"
+    </label>
+  </div>
+
+  <div class="section">
+    <label>
+      <input type="checkbox" id="toggleTitles">
+      Скрывать по словам в заголовке:
+    </label>
+    <textarea id="titleList" placeholder="введите слова, каждое с новой строки или через запятую. Например: chaTgpt, anthRopiC"></textarea>
+    <div class="hint">Поиск по целым словам</div>
+  </div>
+
+  <div class="section">
+    <label>
+      <input type="checkbox" id="toggleTags">
+      Скрывать посты по тегам:
+    </label>
+    <textarea id="tagList" placeholder="введите теги, каждый с новой строки или через запятую. Например: ai, вайб кодинг"></textarea>
+    <div class="hint">К этому списку автоматически добавляются слова из фильтра для заголовков выше.</div>
+  </div>
+
+  <div class="section">
+    <label>
+      <input type="checkbox" id="toggleInvert">
+      Инвертировать фильтры
+    </label>
+    <div class="hint">Скрывать всё, КРОМЕ того, что попадает под фильтры выше.</div>
+  </div>
+
+  <div class="section">
+    <button id="resetBtn" style="background: none; border: none; color: #666; cursor: pointer; font-size: 12px; text-decoration: underline;">
+      Вернуть настройки по умолчанию
+    </button>
+  </div>
+
+  <div class="info">
+    💡 Изменения в списках применяются при следующем обновлении страницы или переключении чекбокса
+  </div>
+
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
