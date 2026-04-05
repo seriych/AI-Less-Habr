@@ -51,6 +51,7 @@ function applyFilter() {
     }
 
     const articles = document.querySelectorAll('.tm-articles-list article');
+    const hiddenUrls = new Set();
 
     const rawTitles = parseList(data.hiddenTitles);
     const rawTags = parseList(data.hiddenTags);
@@ -76,27 +77,42 @@ function applyFilter() {
         if (title && titleContainsWords(title, activeTitleList)) matches = true;
       }
 
-      if (matches) matchCount++;
+      if (matches) {
+        const linkEl = article.querySelector('a.tm-title__link');
+        if (linkEl && linkEl.getAttribute('href')) {
+          hiddenUrls.add(linkEl.getAttribute('href'));
+        }
+        matchCount++;
+      }
 
       let finalHide = data.invertEnabled ? !matches : matches;
       article.style.display = finalHide ? 'none' : '';
     });
 
-    if (data.titlesEnabled && activeTitleList.length > 0) {
-      const newsItems = document.querySelectorAll('.tm-news-block-layout .items li, .sidebar ul.tm-article-list-block__list li');
-      newsItems.forEach(item => {
-        const titleEl = item.querySelector('h3 span, h2 span');
-        if (titleEl) {
-          const title = titleEl.textContent.trim().toLowerCase();
-          const matches = titleContainsWords(title, activeTitleList);
+    const newsItems = document.querySelectorAll('.tm-news-block-layout .items li, .sidebar ul.tm-article-list-block__list li');
+    newsItems.forEach(item => {
+      const titleEl = item.querySelector('h3 span, h2 span, a.tm-article-list-block__item-title');
+      const linkEl = item.querySelector('a');
 
-          if (matches) matchCount++;
+      let matches = false;
 
-          let finalHideNews = data.invertEnabled ? !matches : matches;
-          item.style.display = finalHideNews ? 'none' : '';
+      if (data.titlesEnabled && activeTitleList.length > 0 && titleEl) {
+        const title = titleEl.textContent.trim().toLowerCase();
+        if (titleContainsWords(title, activeTitleList)) matches = true;
+      }
+
+      if (!matches && linkEl) {
+        const href = linkEl.getAttribute('href');
+        if (href && hiddenUrls.has(href)) {
+          matches = true;
         }
-      });
-    }
+      }
+
+      if (matches) matchCount++;
+
+      let finalHideNews = data.invertEnabled ? !matches : matches;
+      item.style.display = finalHideNews ? 'none' : '';
+    });
 
     chrome.runtime.sendMessage({
       type: 'hiddenCounter',
