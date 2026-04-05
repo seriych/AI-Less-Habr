@@ -15,7 +15,7 @@
     tagsEnabled: false,
     hiddenTags: 'agents, AI, ai coding, ai-agent, claude code, genai-платформа, LLM, llm-агент, llm-модели, Moonshot AI, multi-agent, Nano Banana, агенты, вайб кодинг, ИИ, искусственный интеллект, промпт-инженеринг',
     titlesEnabled: false,
-    hiddenTitles: 'AI-агент, AI-ассистент, Anthropic, Banana, ChatGPT, Claude, Copilot, Cursor, Deepseek, Gemini, genai, GigaChat, GPT, Grok, Harvicode, Kodacode, Manus, MiniMax, Mistral, Moonshot, NemoClaw, OpenAI, OpenClaw, Qwen, Qwen3, xAI, вайб-кодинг, вайбкодинг, ИИ-агент, ИИ-агенты, ИИ-ассистент',
+    hiddenTitles: 'AI-агент, AI-ассистент, Anthropic, Banana, ChatGPT, Claude, Copilot, Cursor, Deepseek, Gemini, Gemma, genai, GigaChat, GPT, Grok, Harvicode, Kodacode, Manus, MiniMax, Mistral, Moonshot, NemoClaw, Ollama, OpenAI, OpenClaw, Qwen, Qwen3, xAI, вайб-кодинг, вайбкодинг, ИИ-агент, ИИ-агенты, ИИ-ассистент',
     invertEnabled: false
   },
 
