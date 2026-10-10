@@ -7,7 +7,8 @@
     '/news/',
     '/news/page',
     '/posts/',
-    '/posts/page'
+    '/posts/page',
+    '/packs/daily'
   ],
 
   defaults: {

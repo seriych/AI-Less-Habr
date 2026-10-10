@@ -367,6 +367,58 @@ function applyFilter() {
       packWrapper.style.display = anyVisible ? '' : 'none';
     });
 
+    const dailyCards = document.querySelectorAll('.tm-page.pack-page .article-content');
+    dailyCards.forEach(card => {
+      const titleEl = card.querySelector('.tm-title__link span');
+      if (!titleEl) return;
+      const title = titleEl.textContent.trim().toLowerCase();
+      const normTitle = normalizeTitle(title);
+      const linkEl = card.querySelector('a.tm-title__link');
+      const href = linkEl ? linkEl.getAttribute('href') : null;
+
+      let matches = false;
+      let propagated = false;
+
+      if (data.titlesEnabled && activeTitleList.length > 0) {
+        if (title && titleContainsWords(title, activeTitleList)) matches = true;
+      }
+
+      if (!matches && href && hiddenUrls.has(href)) {
+        matches = true;
+        propagated = true;
+      }
+
+      if (!matches && normTitle && hiddenTitles.has(normTitle)) {
+        matches = true;
+        propagated = true;
+      }
+
+      let mlProbability = 0;
+      const vetoActive = data.mlVetoThreshold > 0 && !data.invertEnabled;
+      if (((!matches && data.mlEnabled) || (matches && !propagated && vetoActive))
+          && typeof mlScore === 'function') {
+        mlProbability = scorePackCard(card, title, href);
+        if (!matches && data.mlEnabled && mlProbability >= data.mlThreshold) matches = true;
+        else if (matches && !propagated && vetoActive
+                 && mlProbability < data.mlVetoThreshold) matches = false;
+      }
+      if (data.mlDebug && !mlProbability) mlProbability = scorePackCard(card, title, href);
+
+      if (matches) matchCount++;
+
+      const badgeContainer = card.querySelector('h2.tm-title') || card;
+      const finalHideCard = data.invertEnabled ? !matches : matches;
+      card.style.display = finalHideCard ? 'none' : '';
+      if (data.mlDebug) showMlBadge(badgeContainer, mlProbability);
+      else removeMlBadge(card);
+    });
+
+    document.querySelectorAll('.tm-page.pack-page .section').forEach(section => {
+      const cards = section.querySelectorAll('.article-content');
+      const anyVisible = [...cards].some(card => card.style.display !== 'none');
+      section.style.display = anyVisible ? '' : 'none';
+    });
+
     chrome.runtime.sendMessage({
       type: 'hiddenCounter',
       count: matchCount,
