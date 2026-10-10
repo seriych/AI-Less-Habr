@@ -11,12 +11,16 @@
   ],
 
   defaults: {
-    enabled: true,
+    enabled: false,
     tagsEnabled: false,
-    hiddenTags: 'agents, AI, ai coding, ai-agent, claude code, genai-платформа, LLM, llm-агент, llm-модели, Moonshot AI, multi-agent, Nano Banana, агенты, вайб кодинг, ИИ, искусственный интеллект, промпт-инженеринг',
+    hiddenTags: 'agents, AI, ai coding, ai-agent, claude code, codex, genai-платформа, LLM, llm-агент, llm-модели, Moonshot AI, multi-agent, Nano Banana, rag, агенты, вайб кодинг, ИИ, искусственный интеллект, промпт-инжиниринг',
     titlesEnabled: false,
-    hiddenTitles: 'AI-агент, AI-ассистент, Anthropic, Banana, ChatGPT, Claude, Copilot, Cursor, Deepseek, Gemini, Gemma, genai, GigaChat, GPT, Grok, Harvicode, Kodacode, Manus, MiniMax, Mistral, Moonshot, NemoClaw, Ollama, OpenAI, OpenClaw, Qwen, Qwen3, xAI, вайб-кодинг, вайбкодинг, ИИ-агент, ИИ-агенты, ИИ-ассистент',
-    invertEnabled: false
+    hiddenTitles: 'AI-агент, AI-ассистент, Anthropic, Banana, ChatGPT, Claude, Codex, Copilot, Cursor, Deepseek, Gemini, Gemma, genai, GigaChat, GPT, Grok, Jev, Kimi, Kodacode, Manus, MCP, MiniMax, Mistral, Moonshot, NemoClaw, Ollama, OpenAI, OpenClaw, Qwen, Qwen3, RAG, VLM, xAI, вайб-кодинг, вайбкодинг, ИИ-агент, ИИ-агенты, ИИ-ассистент, инференс',
+    invertEnabled: false,
+    mlEnabled: true,
+    mlThreshold: 0.85,
+    mlVetoThreshold: 0.1,
+    mlDebug: false
   },
 
   isSupportedPage: function(url) {

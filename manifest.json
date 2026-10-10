@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AI-Less Habr",
   "short_name": "AILessHabr",
-  "version": "2026.4.5.0",
+  "version": "2026.10.9.1",
   "author": "seriych",
   "description": "Hides AI articles on habr.com",
   "icons": {
@@ -30,7 +30,7 @@
         "https://habr.com/*/news/page*",
         "https://habr.com/*/news/"
       ],
-      "js": ["config.js", "content.js"],
+      "js": ["config.js", "ml-model.js", "content.js"],
       "run_at": "document_end"
     }
   ]

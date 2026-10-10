@@ -11,6 +11,27 @@
     .section:last-child { border-bottom: none; margin-bottom: 0; }
     label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
     input[type="checkbox"] { cursor: pointer; }
+    .ml-slider { --track: 8px; position: relative; flex: 1; height: calc(var(--track) + 10px); }
+    .ml-slider .bar {
+      position: absolute;
+      top: calc((100% - var(--track)) / 2);
+      height: var(--track);
+      border-radius: calc(var(--track) / 2);
+    }
+    .dual-range {
+      -webkit-appearance: none; appearance: none;
+      position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+      margin: 0; background: transparent; pointer-events: none;
+    }
+    .dual-range::-webkit-slider-runnable-track { height: 100%; background: transparent; }
+    .dual-range::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; pointer-events: auto;
+      width: calc(var(--track) + 8px); height: calc(var(--track) + 8px); margin-top: 1px;
+      border-radius: 50%; background: #999; border: 2px solid #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,.3); cursor: pointer;
+    }
+    #mlVetoThreshold::-webkit-slider-thumb { background: #43a047; }
+    #mlThreshold::-webkit-slider-thumb { background: #e53935; }
     textarea {
       width: 100%;
       min-height: 40px;
@@ -40,6 +61,30 @@
   <div class="header">
     <img src="icons/icon32.png" alt="icon">
     <h3>AI-Less Habr</h3>
+  </div>
+
+  <div class="section">
+    <label>
+      <input type="checkbox" id="toggleMl">
+      Скрывать по ML-вероятности:
+    </label>
+    <div style="display:flex;align-items:center;gap:2px;margin-top:8px;">
+      <span id="mlVetoValue" style="font-size:13px;min-width:28px;transform:translateY(-1px);font-weight:600;color:#2e7d32;">10%</span>
+      <div class="ml-slider">
+        <div class="bar" style="left:0;right:0;background:#ddd;"></div>
+        <div class="bar" id="mlVetoFill" style="left:0;background:#43a047;"></div>
+        <div class="bar" id="mlHideFill" style="background:#e53935;"></div>
+        <input type="range" id="mlVetoThreshold" class="dual-range" min="0" max="1" step="0.01">
+        <input type="range" id="mlThreshold" class="dual-range" min="0" max="1" step="0.01">
+      </div>
+      <span id="mlThresholdValue" style="font-size:13px;min-width:32px;text-align:right;padding-right:11px;transform:translateY(-1px);font-weight:600;color:#c62828;">85%</span>
+    </div>
+    <div class="hint">Справа - порог скрытия по вероятности ИИ.<br> Слева - статьи, скрытые другими фильтрами, не скрываются, если вероятность ниже порога.</div>
+    <label style="margin-top:8px;">
+      <input type="checkbox" id="toggleMlDebug">
+      Показывать вероятность ИИ
+    </label>
+    <div class="hint">Показывать рядом с заголовкоми вероятность тематики ИИ.</div>
   </div>
 
   <div class="section">
