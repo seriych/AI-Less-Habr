@@ -71,24 +71,43 @@ checkboxMl.addEventListener('change', () => {
   chrome.storage.sync.set({ mlEnabled: checkboxMl.checked }, reloadActiveTab);
 });
 
-// Сохранение порога ML-фильтра
-mlVetoThreshold.addEventListener('input', () => {
-  if (parseFloat(mlVetoThreshold.value) > 0.45) mlVetoThreshold.value = '0.45';
-  updateSliderUi();
-});
+// Пороги ML-фильтра: при сближении ползунки сдвигают друг друга, зазор не меньше MIN_SLIDER_GAP %
+const MIN_SLIDER_GAP = 5;
 
-mlVetoThreshold.addEventListener('change', () => {
-  chrome.storage.sync.set({ mlVetoThreshold: parseFloat(mlVetoThreshold.value) }, reloadActiveTab);
+mlVetoThreshold.addEventListener('input', () => {
+  let v = Math.round(parseFloat(mlVetoThreshold.value) * 100);
+  let t = Math.round(parseFloat(mlThreshold.value) * 100);
+  if (v + MIN_SLIDER_GAP > t) {
+    v = Math.min(v, 100 - MIN_SLIDER_GAP);
+    t = v + MIN_SLIDER_GAP;
+    mlVetoThreshold.value = v / 100;
+    mlThreshold.value = t / 100;
+  }
+  updateSliderUi();
 });
 
 mlThreshold.addEventListener('input', () => {
-  if (parseFloat(mlThreshold.value) < 0.5) mlThreshold.value = '0.5';
+  let v = Math.round(parseFloat(mlVetoThreshold.value) * 100);
+  let t = Math.round(parseFloat(mlThreshold.value) * 100);
+  if (t - MIN_SLIDER_GAP < v) {
+    t = Math.max(t, MIN_SLIDER_GAP);
+    v = t - MIN_SLIDER_GAP;
+    mlVetoThreshold.value = v / 100;
+    mlThreshold.value = t / 100;
+  }
   updateSliderUi();
 });
 
-mlThreshold.addEventListener('change', () => {
-  chrome.storage.sync.set({ mlThreshold: parseFloat(mlThreshold.value) }, reloadActiveTab);
-});
+mlVetoThreshold.addEventListener('change', saveMlThresholds);
+
+mlThreshold.addEventListener('change', saveMlThresholds);
+
+function saveMlThresholds() {
+  chrome.storage.sync.set({
+    mlVetoThreshold: parseFloat(mlVetoThreshold.value),
+    mlThreshold: parseFloat(mlThreshold.value)
+  }, reloadActiveTab);
+}
 
 function updateSliderUi() {
   const v = parseFloat(mlVetoThreshold.value) || 0;
