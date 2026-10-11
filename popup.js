@@ -12,9 +12,22 @@ const mlVetoValue = document.getElementById('mlVetoValue');
 const mlVetoFill = document.getElementById('mlVetoFill');
 const mlHideFill = document.getElementById('mlHideFill');
 const checkboxMlDebug = document.getElementById('toggleMlDebug');
+const mlModelSelect = document.getElementById('mlModelSelect');
 const resetBtn = document.getElementById('resetBtn');
 
-// Загрузка настроек
+const mlModelNames = Object.keys(globalThis.ML_MODELS || {});
+if (mlModelNames.length < 2) {
+  document.getElementById('mlModelRow').style.display = 'none';
+} else {
+  for (const n of mlModelNames) {
+    const o = document.createElement('option');
+    o.value = n;
+    o.textContent = globalThis.ML_MODELS[n].label;
+    mlModelSelect.appendChild(o);
+  }
+  mlModelSelect.selectedIndex = 0;
+}
+
 chrome.storage.sync.get(HABR_CONFIG.defaults, (data) => {
   checkbox.checked = data.enabled;
   checkboxTags.checked = data.tagsEnabled;
@@ -27,6 +40,9 @@ chrome.storage.sync.get(HABR_CONFIG.defaults, (data) => {
   mlVetoThreshold.value = data.mlVetoThreshold;
   updateSliderUi();
   checkboxMlDebug.checked = data.mlDebug;
+  if (mlModelSelect.options.length > 0 && [...mlModelSelect.options].some(o => o.value === data.mlModel)) {
+    mlModelSelect.value = data.mlModel;
+  }
 
   setTimeout(() => {
     autoResize(tagList);
@@ -34,44 +50,36 @@ chrome.storage.sync.get(HABR_CONFIG.defaults, (data) => {
   }, 0);
 });
 
-// Сохранение настройки фильтрации по хабу ИИ
 checkbox.addEventListener('change', () => {
   chrome.storage.sync.set({ enabled: checkbox.checked }, reloadActiveTab);
 });
 
-// Сохранение настройки включения фильтрации по тегам
 checkboxTags.addEventListener('change', () => {
   chrome.storage.sync.set({ tagsEnabled: checkboxTags.checked }, reloadActiveTab);
 });
 
-// Сохранение списка тегов для скрытия
 tagList.addEventListener('input', () => {
   autoResize(tagList);
   chrome.storage.sync.set({ hiddenTags: tagList.value });
 });
 
-// Сохранение включения фильтра по заголовкам
 checkboxTitles.addEventListener('change', () => {
   chrome.storage.sync.set({ titlesEnabled: checkboxTitles.checked }, reloadActiveTab);
 });
 
-// Сохранение списка слов для заголовков
 titleList.addEventListener('input', () => {
   autoResize(titleList);
   chrome.storage.sync.set({ hiddenTitles: titleList.value });
 });
 
-// Инвертируем фильтры
 checkboxInvert.addEventListener('change', () => {
   chrome.storage.sync.set({ invertEnabled: checkboxInvert.checked }, reloadActiveTab);
 });
 
-// Сохранение включения ML-фильтра
 checkboxMl.addEventListener('change', () => {
   chrome.storage.sync.set({ mlEnabled: checkboxMl.checked }, reloadActiveTab);
 });
 
-// Пороги ML-фильтра: при сближении ползунки сдвигают друг друга, зазор не меньше MIN_SLIDER_GAP %
 const MIN_SLIDER_GAP = 5;
 
 mlVetoThreshold.addEventListener('input', () => {
@@ -119,12 +127,14 @@ function updateSliderUi() {
   mlThresholdValue.textContent = Math.round(t * 100) + '%';
 }
 
-// Сохранение режима отладки ML
 checkboxMlDebug.addEventListener('change', () => {
   chrome.storage.sync.set({ mlDebug: checkboxMlDebug.checked }, reloadActiveTab);
 });
 
-// Сброс настроек
+mlModelSelect.addEventListener('change', () => {
+  chrome.storage.sync.set({ mlModel: mlModelSelect.value }, reloadActiveTab);
+});
+
 let resetTimer;
 const resetTextOriginal = 'Вернуть настройки по умолчанию';
 
@@ -142,6 +152,7 @@ resetBtn.addEventListener('click', () => {
     return;
   }
 
+  chrome.storage.sync.remove('mlModel');
   chrome.storage.sync.set(HABR_CONFIG.defaults, () => {
     const def = HABR_CONFIG.defaults;
     checkbox.checked = def.enabled;
@@ -155,6 +166,7 @@ resetBtn.addEventListener('click', () => {
     mlVetoThreshold.value = def.mlVetoThreshold;
     updateSliderUi();
     checkboxMlDebug.checked = def.mlDebug;
+    mlModelSelect.selectedIndex = 0;
 
     autoResize(tagList);
     autoResize(titleList);

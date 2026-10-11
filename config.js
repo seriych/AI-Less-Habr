@@ -21,6 +21,7 @@
     mlEnabled: true,
     mlThreshold: 0.85,
     mlVetoThreshold: 0.1,
+    mlModel: null,
     mlDebug: false
   },
 
