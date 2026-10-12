@@ -16,13 +16,20 @@ const mlModelSelect = document.getElementById('mlModelSelect');
 const resetBtn = document.getElementById('resetBtn');
 
 const mlModelNames = Object.keys(globalThis.ML_MODELS || {});
+const mlInfo = Object.fromEntries((globalThis.ML_INFO ? globalThis.ML_INFO.models : []).map((m) => [m.name, m]));
 if (mlModelNames.length < 2) {
   document.getElementById('mlModelRow').style.display = 'none';
 } else {
   for (const n of mlModelNames) {
     const o = document.createElement('option');
     o.value = n;
-    o.textContent = globalThis.ML_MODELS[n].label;
+    const mi = mlInfo[n];
+    let text = n;
+    if (mi && mi.hoAUC != null) {
+      text = `${n} - hoAUC ${mi.hoAUC.toFixed(3)}`;
+      if (mi.fpr85 != null) text += ` · fpr85 ${mi.fpr85.toFixed(4)}`;
+    }
+    o.textContent = text;
     mlModelSelect.appendChild(o);
   }
   mlModelSelect.selectedIndex = 0;

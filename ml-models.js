@@ -1,6 +1,12 @@
 // Auto-generated model data. Do not edit.
 (function () {
-  var ML_VERSION = '2026.10.8.1';
+  var ML_VERSION = '2026.10.10.0';
+
+  var ML_INFO = {
+    models: [
+      { name: 'w1-2_c2-2', cvAUC: 0.9823, hoAUC: 0.9838, hoPRAUC: 0.9743, brier: 0.0450, precision85: 0.9873, fpr85: 0.0051, precision90: 0.9966, fpr90: 0.0013, feats: 60750, train: 5770, holdout: 1220, config: { leadMaxChars: 300, titleRepeat: 2, wordMin: 1, wordMax: 2, charMin: 2, charMax: 2 }, bias: -0.8770394447567249, temperature: 0.6234246086544877 }
+    ]
+  };
 
   function decodeF32(b64) {
     var bin = atob(b64);
@@ -10,11 +16,7 @@
   }
 
   var ML_MODELS = {
-    'w12_c22': {
-      label: 'w1-2 / c2-2',
-      config: { leadMaxChars: 300, titleRepeat: 2, wordMin: 1, wordMax: 2, charMin: 2, charMax: 2 },
-      bias: -0.8770394447567249,
-      temperature: 0.6234246086544877,
+    'w1-2_c2-2': {
       vocabFC: `0:c:00
 3:1
 3:2
@@ -60774,6 +60776,11 @@
   function get(name) {
     var m = ML_MODELS[name];
     if (!m) return null;
+    var info = null;
+    for (var i = 0; i < ML_INFO.models.length; i++) {
+      if (ML_INFO.models[i].name === name) { info = ML_INFO.models[i]; break; }
+    }
+    if (!info) return null;
     if (!cache[name]) {
       var lines = m.vocabFC.split('\n');
       var vocab = new Array(lines.length);
@@ -60788,7 +60795,7 @@
       for (var j = 0; j < vocab.length; j++) index.set(vocab[j], j);
       cache[name] = { index: index, idf: decodeF32(m.idfB64), weights: decodeF32(m.wB64) };
     }
-    return { m: m, d: cache[name] };
+    return { i: info, d: cache[name] };
   }
 
   function tokenize(s) {
@@ -60799,7 +60806,7 @@
     return function (title, lead, hubs, tags) {
       var e = get(name);
       if (!e) return 0;
-      var cfg = e.m.config;
+      var cfg = e.i.config;
       var titleToks = tokenize(title || '');
       var leadToks = tokenize(Array.from(lead || '').slice(0, cfg.leadMaxChars).join(''));
       var toks = [];
@@ -60838,8 +60845,9 @@
         dot += v * e.d.weights[idx];
       });
       if (norm > 0) dot /= Math.sqrt(norm);
-      return 1 / (1 + Math.exp(-(dot + e.m.bias) / e.m.temperature));
+      return 1 / (1 + Math.exp(-(dot + e.i.bias) / e.i.temperature));
     };
   };
+  globalThis.ML_INFO = ML_INFO;
   globalThis.ML_MODELS = ML_MODELS;
 })();
