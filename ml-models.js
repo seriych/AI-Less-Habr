@@ -4,7 +4,7 @@
 
   var ML_INFO = {
     models: [
-      { name: 'w1-2_c2-2', cvAUC: 0.9823, hoAUC: 0.9838, hoPRAUC: 0.9743, brier: 0.0450, precision85: 0.9873, fpr85: 0.0051, precision90: 0.9966, fpr90: 0.0013, feats: 60750, train: 5770, holdout: 1220, config: { leadMaxChars: 300, titleRepeat: 2, wordMin: 1, wordMax: 2, charMin: 2, charMax: 2 }, bias: -0.8770394447567249, temperature: 0.6234246086544877 }
+      { name: 'w1-2_c2-2', cvAUC: 0.9823, hoAUC: 0.9838, hoPRAUC: 0.9743, brier: 0.0450, precision85: 0.9873, fpr85: 0.0051, precision90: 0.9966, fpr90: 0.0013, feats: 60750, train: 5770, holdout: 1220, config: { leadMaxChars: 300, titleRepeat: 2, wordMin: 1, wordMax: 2, charMin: 2, charMax: 2 }, bias: -0.87703943, temperature: 0.6234246 }
     ]
   };
 
