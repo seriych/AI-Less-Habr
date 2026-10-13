@@ -33,9 +33,16 @@ function getArticleTitle(article) {
   if (titleLink) {
     return titleLink.textContent.trim().toLowerCase();
   }
-  const strongP = article.querySelector('.tm-post-snippet__content p strong')
-    || article.querySelector('.tm-post-snippet__content p');
-  return strongP ? strongP.textContent.trim().toLowerCase() : '';
+  // заголовок поста = первый абзац, только если он целиком жирный
+  const content = article.querySelector('.tm-post-snippet__content');
+  if (!content) return '';
+  const p = Array.from(content.querySelectorAll('p')).find(el => el.textContent.trim());
+  if (!p) return '';
+  const strong = p.querySelector('strong');
+  if (strong && strong.textContent.trim().length >= 0.8 * p.textContent.trim().length) {
+    return strong.textContent.trim().toLowerCase();
+  }
+  return '';
 }
 
 function getArticleLead(article) {
@@ -487,5 +494,11 @@ function scheduleFilter() {
 const observer = new MutationObserver(scheduleFilter);
 observer.observe(document.body, { childList: true, subtree: true });
 window.addEventListener('resize', scheduleFilter);
+
+// сдвиг высоты без DOM-мутаций (ленивые блоки, картинки) тоже двигает бейджи
+const layoutObserver = new ResizeObserver(scheduleFilter);
+layoutObserver.observe(document.documentElement);
+layoutObserver.observe(document.body);
+document.addEventListener('load', scheduleFilter, true);
 
 applyFilter();

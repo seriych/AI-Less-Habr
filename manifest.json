@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AI-Less Habr",
   "short_name": "AILessHabr",
-  "version": "2026.10.11.0",
+  "version": "2026.10.13.0",
   "author": "seriych",
   "description": "Hides AI articles on habr.com",
   "icons": {
