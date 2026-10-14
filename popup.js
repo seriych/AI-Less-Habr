@@ -27,7 +27,7 @@ if (mlModelNames.length < 2) {
     let text = n;
     if (mi && mi.hoAUC != null) {
       text = `${n} - hoAUC ${mi.hoAUC.toFixed(3)}`;
-      if (mi.fpr85 != null) text += ` · fpr85 ${mi.fpr85.toFixed(4)}`;
+      if (mi.feats != null) text += ` · feats ${mi.feats}`;
     }
     o.textContent = text;
     mlModelSelect.appendChild(o);
